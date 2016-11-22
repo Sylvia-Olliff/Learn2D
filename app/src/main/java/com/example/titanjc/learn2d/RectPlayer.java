@@ -62,9 +62,9 @@ public class RectPlayer implements GameObject {
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
 
         int state = 0;
-        if (rectangle.left - oldLeft > 5)
+        if (rectangle.left - oldLeft > 15)
             state = 1;
-        else if (rectangle.left - oldLeft < -5)
+        else if (rectangle.left - oldLeft < -15)
             state = 2;
 
         animationManager.playAnim(state);
