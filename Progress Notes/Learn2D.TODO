@@ -1,0 +1,19 @@
+
+  IMPROVEMENTS:
+    ☐ add more leaway for animation change based on direction
+    ☐ add more leaway for movement to the left or right for phone rotation
+    ☐ Increase size of player box and icon
+
+
+GAMEPLAY:
+  ☐ Create main menu 
+  ☐ Create settings menu
+  ☐ Add sound effects
+  ☐ Add background music
+  ☐ Remove obstacles and obstacle manager, replacing with bots and bot manager
+
+
+OPPONENT:
+  ☐ Create AI interface based on opponent type (2 for now)
+  ☐ Create Opponent Game object class for behavior
+  ☐ Create game objects to represent laser fire
