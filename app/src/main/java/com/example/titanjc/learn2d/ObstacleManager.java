@@ -27,7 +27,7 @@ public class ObstacleManager {
         this.obstacleGap = obstacleGap;
         this.obstacleHeight = obstacleHeight;
         this.color = color;
-        score = 0;
+        this.score = 0;
 
         startTime = initTime = System.currentTimeMillis();
 
@@ -56,6 +56,7 @@ public class ObstacleManager {
 
     public void update() {
         int elapsedTime = (int) (System.currentTimeMillis() - startTime);
+
         startTime = System.currentTimeMillis();
         float speed = (float) (Math.sqrt((startTime - initTime)/3000.0))*Constants.SCREEN_HEIGHT/(10000.0f);
 
@@ -68,7 +69,7 @@ public class ObstacleManager {
             obstacles.add(0, new Obstacle(obstacleHeight, color, xStart, obstacles.get(0).getRectangle().top - obstacleHeight - obstacleGap ,playerGap));
             obstacles.remove(obstacles.size() - 1);
         }
-        score += (elapsedTime/250);
+        this.score += (elapsedTime/5);
     }
 
     public void draw(Canvas canvas) {
@@ -79,5 +80,6 @@ public class ObstacleManager {
         Paint paint = new Paint();
         paint.setTextSize(100);
         paint.setColor(Color.MAGENTA);
+        canvas.drawText("Score: " + score, 50, 50 + paint.descent() - paint.ascent(), paint);
     }
 }

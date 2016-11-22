@@ -1,5 +1,7 @@
 package com.example.titanjc.learn2d;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -14,6 +16,11 @@ public class RectPlayer implements GameObject {
     private Rect rectangle;
     private int color;
 
+    private Animation idle;
+    private Animation walkRight;
+    private Animation walkLeft;
+    private AnimationManager animationManager;
+
     public Rect getRectangle() {
         return rectangle;
     }
@@ -21,22 +28,46 @@ public class RectPlayer implements GameObject {
     public RectPlayer(Rect rectangle, int color) {
         this.rectangle = rectangle;
         this.color = color;
+
+        BitmapFactory bf = new BitmapFactory();
+        Bitmap idleImg = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player);
+        Bitmap walkR = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_right);
+        Bitmap walkL = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_left);
+
+        idle = new Animation(new Bitmap[]{idleImg}, 2);
+        walkRight = new Animation(new Bitmap[]{walkR}, 2.0f);
+        walkLeft = new Animation(new Bitmap[]{walkL}, 2.0f);
+
+
+
+        animationManager = new AnimationManager(new Animation[]{idle, walkRight, walkLeft});
     }
 
     @Override
     public void draw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(this.color);
-        canvas.drawRect(rectangle, paint);
+        //Paint paint = new Paint();
+        //paint.setColor(this.color);
+        //canvas.drawRect(rectangle, paint);
+        animationManager.draw(canvas, rectangle);
     }
 
     @Override
     public void update() {
-
+        animationManager.update();
     }
 
     public void update(Point point) {
-        //left, top, right, bottom
-        rectangle.set(point.x - rectangle.width()/2, point.y + rectangle.height()/2, point.x + rectangle.width()/2, point.y - rectangle.height()/2);
+        float oldLeft = rectangle.left;
+
+        rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
+
+        int state = 0;
+        if (rectangle.left - oldLeft > 5)
+            state = 1;
+        else if (rectangle.left - oldLeft < -5)
+            state = 2;
+
+        animationManager.playAnim(state);
+        animationManager.update();
     }
 }
