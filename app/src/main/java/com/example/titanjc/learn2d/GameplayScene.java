@@ -1,10 +1,14 @@
 package com.example.titanjc.learn2d;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 
 /**
@@ -26,10 +30,9 @@ public class GameplayScene implements Scene {
     private long frameTime;
 
     public GameplayScene() {
-        player = new RectPlayer(new Rect(110, 110, 210, 210), Color.rgb(255, 0, 0));
+        player = new RectPlayer(new Rect(110, 110, 210, 210));
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
-
         r = new Rect();
 
         obstacleManager = new ObstacleManager(275, 350, 75, Color.BLACK);
@@ -77,7 +80,9 @@ public class GameplayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        Drawable bg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.star_background);
+        bg.setBounds(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        bg.draw(canvas);
 
         player.draw(canvas);
         obstacleManager.draw(canvas);

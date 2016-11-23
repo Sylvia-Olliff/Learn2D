@@ -1,6 +1,7 @@
 package com.example.titanjc.learn2d;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Created by TITANJC on 11/16/2016.

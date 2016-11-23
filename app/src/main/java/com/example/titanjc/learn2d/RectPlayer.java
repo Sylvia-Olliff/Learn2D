@@ -14,7 +14,6 @@ import android.graphics.Rect;
 public class RectPlayer implements GameObject {
 
     private Rect rectangle;
-    private int color;
 
     private Animation idle;
     private Animation walkRight;
@@ -25,14 +24,12 @@ public class RectPlayer implements GameObject {
         return rectangle;
     }
 
-    public RectPlayer(Rect rectangle, int color) {
+    public RectPlayer(Rect rectangle) {
         this.rectangle = rectangle;
-        this.color = color;
 
-        BitmapFactory bf = new BitmapFactory();
-        Bitmap idleImg = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player);
-        Bitmap walkR = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_right);
-        Bitmap walkL = bf.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_left);
+        Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player);
+        Bitmap walkR = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_right);
+        Bitmap walkL = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_left);
 
         idle = new Animation(new Bitmap[]{idleImg}, 2);
         walkRight = new Animation(new Bitmap[]{walkR}, 2.0f);
