@@ -22,7 +22,6 @@ public class Obstacle implements GameObject {
         this.color = color;
         rectangle = new Rect(0, startY, startX, startY + rectHeight);
         rectangle2 = new Rect(startX + playerGap, startY, Constants.SCREEN_WIDTH, startY + rectHeight);
-
     }
 
     public void incrementY(float y) {

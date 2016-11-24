@@ -10,9 +10,9 @@ import android.graphics.Rect;
  */
 
 public class BotNormal extends Enemy {
-    private static int MAX_HITS = 1;
-    private static int MIN_FIRE_RATE = 3;
-    private static int MAX_FIRE_RATE = 5;
+    private int MAX_HITS = 1;
+    private int MIN_FIRE_RATE = 3;
+    private int MAX_FIRE_RATE = 5;
     private int hits;
 
     private int ID;
@@ -20,6 +20,7 @@ public class BotNormal extends Enemy {
     public void setID(int ID) {this.ID = ID;}
     public int getMinFireRate() {return MIN_FIRE_RATE;}
     public int getMaxFireRate() {return MAX_FIRE_RATE;}
+    public Rect getRectangle() {return super.rectangle;}
 
     public BotNormal(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
         super(idleImg, moveR, moveL, rectangle);
@@ -27,8 +28,8 @@ public class BotNormal extends Enemy {
     }
 
     @Override
-    public void incrementY(float y) {
-        super.incrementY(y);
+    public void move() {
+        super.move();
     }
 
     @Override
@@ -50,8 +51,9 @@ public class BotNormal extends Enemy {
         //TODO: Spawn flash animation for firing as well as laser object starting from bottom of rectangle
     }
 
+    @Override
     public boolean playerCollide(RectPlayer player) {
-        return Rect.intersects(super.rectangle, player.getRectangle());
+        return super.playerCollide(player);
     }
 
     public boolean laserHit(PlayerLaser playerLaser) {

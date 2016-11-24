@@ -12,30 +12,60 @@ import android.graphics.Rect;
 public abstract class Enemy implements GameObject {
     protected Rect rectangle;
 
-    private Animation idle;
-    private Animation moveLeft;
-    private Animation moveRight;
-
     private AnimationManager animationManager;
+    private int count = 0;
+    private boolean left;
 
     public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
         this.rectangle = rectangle;
-
-        idle = new Animation(new Bitmap[]{idleImg}, 2);
-        moveRight = new Animation(new Bitmap[]{moveR}, 2.0f);
-        moveLeft = new Animation(new Bitmap[]{moveL}, 2.0f);
+        this.left = (Math.random() < 0.5);
+        Animation idle = new Animation(new Bitmap[]{idleImg}, 2);
+        Animation moveRight = new Animation(new Bitmap[]{moveR}, 2.0f);
+        Animation moveLeft = new Animation(new Bitmap[]{moveL}, 2.0f);
 
         animationManager = new AnimationManager(new Animation[]{idle, moveRight, moveLeft});
     }
 
-    public void incrementY(float y) {
-        rectangle.top += y;
-        rectangle.bottom += y;
+    public void move() {
+        if (count != MainThread.MAX_FPS * 3) {
+            count++;
+        } else {
+            count = 0;
+            left = (Math.random() < 0.5);
+        }
+
+        if(rectangle.bottom >= Constants.MOVE_FLOOR) {
+            if (left) {
+                if (rectangle.left - (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS) <= 0 ) {
+                    left = false;
+                    count = MainThread.MAX_FPS * 3;
+                } else {
+                    rectangle.left -= (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS);
+                    rectangle.right -= (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS);
+                }
+
+            } else {
+                if (rectangle.right - (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS) >= Constants.SCREEN_WIDTH ) {
+                    left = true;
+                    count = MainThread.MAX_FPS * 3;
+                } else {
+                    rectangle.left += (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS);
+                    rectangle.right += (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS);
+                }
+            }
+        } else {
+            rectangle.top += ((Constants.BOT_MOVE_SPEED*2) / MainThread.MAX_FPS);
+            rectangle.bottom += ((Constants.BOT_MOVE_SPEED*2) / MainThread.MAX_FPS);
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
         animationManager.draw(canvas, rectangle);
+    }
+
+    public boolean playerCollide(RectPlayer player) {
+        return Rect.intersects(rectangle, player.getRectangle());
     }
 
     @Override
