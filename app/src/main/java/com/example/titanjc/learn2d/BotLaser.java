@@ -10,8 +10,8 @@ import android.graphics.Rect;
 public class BotLaser implements GameObject {
     private Rect rectangle;
 
-    public BotLaser() {
-        this.rectangle = new Rect(5,20,10,0);
+    public BotLaser(Rect rectangle) {
+        this.rectangle = rectangle;
     }
 
     @Override

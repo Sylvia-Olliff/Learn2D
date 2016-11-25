@@ -17,6 +17,7 @@ import java.util.Random;
 
 public class BotManager {
     private ArrayList<Enemy> enemies;
+    private ArrayList<BotLaser> botLasers;
 
     private long startTime;
     private long initTime;
@@ -25,6 +26,7 @@ public class BotManager {
 
     public BotManager() {
         enemies = new ArrayList<>();
+        botLasers = new ArrayList<>();
         Constants.MOVE_FLOOR = (Constants.SCREEN_HEIGHT/3);
         Constants.BOT_MOVE_SPEED = 180;
     }
@@ -37,8 +39,12 @@ public class BotManager {
 
         startTime = System.currentTimeMillis();
 
+        //TODO: Each enemy should have a random chance of firing. Enemy should control the chance, call the method on the enemy then call fire if returns true
         for(Enemy enemy : enemies) {
             enemy.move();
+            if(enemy.shouldFire()) {
+                enemy.fire();
+            }
         }
 
         if (shouldSpawn()) {
@@ -72,16 +78,18 @@ public class BotManager {
         Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
         Bitmap walkR = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
         Bitmap walkL = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
+        Bitmap flash = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green_shot);
+        Bitmap laser = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green);
 
         int xStart = (int) (Math.random()*(Constants.SCREEN_WIDTH ));
 
         if (type == 1) {
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(110, 110, 260, 260)));
+            enemies.add(0, new BotNormal(idleImg, walkR, walkL, flash, laser, new Rect(110, 110, 260, 260)));
             Random r = new Random();
             enemies.get(0).update(new Point(r.nextInt(Constants.SCREEN_WIDTH-1) + 1, -Constants.SCREEN_HEIGHT/4));
         } else if(type == 2) {
             //TODO: Add UFO spawning
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(200, 200, xStart, 200)));
+            enemies.add(0, new BotNormal(idleImg, walkR, walkL, flash, laser, new Rect(200, 200, xStart, 200)));
         }
     }
 
