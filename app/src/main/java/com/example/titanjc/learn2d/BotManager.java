@@ -39,12 +39,16 @@ public class BotManager {
 
         startTime = System.currentTimeMillis();
 
-        //TODO: Each enemy should have a random chance of firing. Enemy should control the chance, call the method on the enemy then call fire if returns true
         for(Enemy enemy : enemies) {
             enemy.move();
             if(enemy.shouldFire()) {
-                enemy.fire();
+                //TODO add the laser object to the ArrayList to track and move them here along with enemies
+                botLasers.add(0, enemy.fire());
             }
+        }
+
+        for(BotLaser laser : botLasers) {
+            laser.update();
         }
 
         if (shouldSpawn()) {
@@ -57,7 +61,10 @@ public class BotManager {
         for (Enemy enemy : enemies) {
             enemy.draw(canvas);
         }
-
+        //TODO Issue here with animation of the laser. Currently only the enemy abstract class has the animation manager, no way to pair the two right now. Maybe add animation manager to BotLaser class? Or create laser class for both player and Bot?
+        for(BotLaser laser : botLasers) {
+            laser.draw(canvas);
+        }
 //        Paint paint = new Paint();
 //        paint.setTextSize(100);
 //        paint.setColor(Color.MAGENTA);
