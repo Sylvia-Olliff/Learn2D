@@ -3,12 +3,11 @@ package com.example.titanjc.learn2d;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -29,6 +28,7 @@ public class BotManager {
         botLasers = new ArrayList<>();
         Constants.MOVE_FLOOR = (Constants.SCREEN_HEIGHT/3);
         Constants.BOT_MOVE_SPEED = 180;
+        Constants.LASER_BOLT_SPEED = 290;
     }
 
     public void update() {
@@ -43,12 +43,17 @@ public class BotManager {
             enemy.move();
             if(enemy.shouldFire()) {
                 //TODO add the laser object to the ArrayList to track and move them here along with enemies
+
                 botLasers.add(0, enemy.fire());
             }
         }
 
-        for(BotLaser laser : botLasers) {
+        for(Iterator<BotLaser> laserIterator = botLasers.iterator(); laserIterator.hasNext();) {
+            BotLaser laser = laserIterator.next();
+            laser.move();
             laser.update();
+            if(laser.getRectangle().bottom >= Constants.SCREEN_HEIGHT)
+                laserIterator.remove();
         }
 
         if (shouldSpawn()) {
@@ -72,8 +77,8 @@ public class BotManager {
     }
 
     private boolean shouldSpawn() {
-        if (enemies.size() < 5) {
-            //TODO: Add more random generation. for now always keep 1 enemies
+        if (enemies.size() < 10) {
+            //TODO: Add more random generation. for now always keep static number of enemies
             return true;
         } else {
             return false;
@@ -85,18 +90,16 @@ public class BotManager {
         Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
         Bitmap walkR = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
         Bitmap walkL = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
-        Bitmap flash = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green_shot);
-        Bitmap laser = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green);
 
         int xStart = (int) (Math.random()*(Constants.SCREEN_WIDTH ));
 
         if (type == 1) {
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, flash, laser, new Rect(110, 110, 260, 260)));
+            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(110, 110, 260, 260)));
             Random r = new Random();
             enemies.get(0).update(new Point(r.nextInt(Constants.SCREEN_WIDTH-1) + 1, -Constants.SCREEN_HEIGHT/4));
         } else if(type == 2) {
             //TODO: Add UFO spawning
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, flash, laser, new Rect(200, 200, xStart, 200)));
+            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(200, 200, xStart, 200)));
         }
     }
 
@@ -104,6 +107,15 @@ public class BotManager {
         for (Enemy enemy : enemies) {
             if (enemy.playerCollide(player))
                 return true;
+        }
+        return false;
+    }
+
+    public boolean playerShot(RectPlayer player) {
+        for (BotLaser laser : botLasers) {
+            if(laser.playerShot(player)) {
+                return true;
+            }
         }
         return false;
     }

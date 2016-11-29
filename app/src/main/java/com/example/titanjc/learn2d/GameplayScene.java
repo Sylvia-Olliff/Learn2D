@@ -11,19 +11,20 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 /**
  * Created by TITANJC on 11/21/2016.
  */
 
 public class GameplayScene implements Scene {
     private Rect r;
+    private ArrayList<PlayerLaser> playerLasers;
 
     private RectPlayer player;
     private Point playerPoint;
-    //private ObstacleManager obstacleManager;
     private BotManager botManager;
 
-    private boolean movingPlayer;
     private boolean gameOver;
     private long gameOverTime;
 
@@ -35,8 +36,8 @@ public class GameplayScene implements Scene {
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
         r = new Rect();
+        playerLasers = new ArrayList<>();
 
-//        obstacleManager = new ObstacleManager(275, 350, 75, Color.BLACK);
         botManager = new BotManager();
         orientationData = new OrientationData();
         orientationData.register();
@@ -72,14 +73,9 @@ public class GameplayScene implements Scene {
                 playerPoint.y = Constants.SCREEN_HEIGHT;
 
             player.update(playerPoint);
-//            obstacleManager.update();
             botManager.update();
-//            if (obstacleManager.playerCollide(player)) {
-//                gameOver = true;
-//                gameOverTime = System.currentTimeMillis();
-//            }
 
-            if (botManager.playerCollide(player)) {
+            if (botManager.playerCollide(player) || botManager.playerShot(player)) {
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
             }
@@ -93,7 +89,6 @@ public class GameplayScene implements Scene {
         bg.draw(canvas);
 
         player.draw(canvas);
-        //obstacleManager.draw(canvas);
         botManager.draw(canvas);
 
         if (gameOver) {
@@ -107,9 +102,7 @@ public class GameplayScene implements Scene {
     public void reset() {
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
-//        obstacleManager = new ObstacleManager(200, 350, 75, Color.BLACK);
         botManager = new BotManager();
-        movingPlayer = false;
     }
 
     @Override
@@ -119,23 +112,17 @@ public class GameplayScene implements Scene {
 
     @Override
     public void recieveTouch(MotionEvent event) {
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if(!gameOver && player.getRectangle().contains((int) event.getX(), (int) event.getY()))
-                    movingPlayer = true;
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(!gameOver ) {
+                    //TODO fire player lasers
+                }
+
                 if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
                     reset();
                     gameOver = false;
                     orientationData.newGame();
                 }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (!gameOver && movingPlayer)
-                    playerPoint.set((int) event.getX(), (int) event.getY());
-                break;
-            case MotionEvent.ACTION_UP:
-                movingPlayer = false;
-                break;
         }
     }
 

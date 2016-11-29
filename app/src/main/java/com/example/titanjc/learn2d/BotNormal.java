@@ -15,7 +15,7 @@ import java.util.Random;
 public class BotNormal extends Enemy {
     private int MAX_HITS = 1;
     private int MIN_FIRE_RATE = 3;
-    private int MAX_FIRE_RATE = 5;
+    private int MAX_FIRE_RATE = 10;
     private int hits;
     private Random r = new Random();
     private int firingRate;
@@ -29,11 +29,10 @@ public class BotNormal extends Enemy {
     public int getMaxFireRate() {return MAX_FIRE_RATE;}
     public Rect getRectangle() {return super.rectangle;}
 
-    public BotNormal(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Bitmap flash, Bitmap laser, Rect rectangle) {
-        super(idleImg, moveR, moveL, flash, laser, rectangle);
+    public BotNormal(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
+        super(idleImg, moveR, moveL, rectangle);
         this.hits = 0;
-        this.firingRate = r.nextInt(this.MAX_FIRE_RATE - this.MIN_FIRE_RATE);
-
+        this.firingRate = (r.nextInt(this.MAX_FIRE_RATE - this.MIN_FIRE_RATE)) + this.MIN_FIRE_RATE;
         this.lastTime = System.currentTimeMillis();
         this.currentTime = System.currentTimeMillis();
     }
@@ -67,10 +66,13 @@ public class BotNormal extends Enemy {
     @Override
     public boolean shouldFire() {
         this.currentTime = System.currentTimeMillis();
-
-        boolean fire = ((int) (currentTime/1000) - (int) (lastTime/1000) >= firingRate);
-
-        this.lastTime = System.currentTimeMillis();
+        boolean fire;
+        if ((int) (currentTime/1000) - (int) (lastTime/1000) >= firingRate && super.rectangle.bottom >= Constants.MOVE_FLOOR) {
+            fire = true;
+            this.lastTime = System.currentTimeMillis();
+        } else {
+            fire = false;
+        }
         return fire;
     }
 

@@ -16,16 +16,14 @@ public abstract class Enemy implements GameObject {
     private int count = 0;
     private boolean left;
 
-    public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Bitmap laserFlash, Bitmap laserBolt, Rect rectangle) {
+    public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
         this.rectangle = rectangle;
         this.left = (Math.random() < 0.5);
         Animation idle = new Animation(new Bitmap[]{idleImg}, 2);
         Animation moveRight = new Animation(new Bitmap[]{moveR}, 2.0f);
         Animation moveLeft = new Animation(new Bitmap[]{moveL}, 2.0f);
-        Animation laserFire = new Animation(new Bitmap[]{laserFlash}, 0.5f);
-        Animation laser = new Animation(new Bitmap[]{laserBolt}, 2.0f);
 
-        animationManager = new AnimationManager(new Animation[]{idle, moveRight, moveLeft, laserFire, laser});
+        animationManager = new AnimationManager(new Animation[]{idle, moveRight, moveLeft});
     }
 
     public void move() {
@@ -75,7 +73,7 @@ public abstract class Enemy implements GameObject {
     }
 
     public BotLaser fire() {
-        return new BotLaser(new Rect(rectangle.left, rectangle.top - rectangle.bottom, rectangle.right, rectangle.bottom + 20));
+        return new BotLaser(new Rect(rectangle.left, rectangle.top, rectangle.right, rectangle.bottom - 15));
     }
 
     @Override
