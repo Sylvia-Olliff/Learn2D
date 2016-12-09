@@ -23,6 +23,7 @@ public class BotManager {
     private long initTime;
 
     private int score;
+    public int getScore() {return score;}
 
     public BotManager() {
         enemies = new ArrayList<>();

@@ -24,6 +24,9 @@ public class GameplayScene implements Scene {
     private Point playerPoint;
     private BotManager botManager;
 
+    private int currentScore;
+    private Paint scorePaint;
+
     private boolean gameOver;
     private long gameOverTime;
 
@@ -36,10 +39,13 @@ public class GameplayScene implements Scene {
         player.update(playerPoint);
         r = new Rect();
 
+        scorePaint = new Paint();
+
         botManager = new BotManager();
         orientationData = new OrientationData();
         orientationData.register();
         frameTime = System.currentTimeMillis();
+        currentScore = botManager.getScore();
     }
 
     @Override
@@ -72,7 +78,7 @@ public class GameplayScene implements Scene {
 
             player.update(playerPoint);
             botManager.update();
-
+            currentScore = botManager.getScore();
             if (botManager.playerCollide(player) || botManager.playerShot(player)) {
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
@@ -88,6 +94,10 @@ public class GameplayScene implements Scene {
 
         player.draw(canvas);
         botManager.draw(canvas);
+
+        scorePaint.setTextSize(100);
+        scorePaint.setColor(Color.MAGENTA);
+        canvas.drawText("" + currentScore, 50, 50 + scorePaint.descent() - scorePaint.ascent(), scorePaint);
 
         if (gameOver) {
             Paint paint = new Paint();
