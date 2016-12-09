@@ -59,4 +59,8 @@ public class PlayerLaser implements GameObject {
         animationManager.playAnim(1);
         animationManager.update();
     }
+
+    public boolean botShot(Enemy enemy) {
+        return Rect.intersects(rectangle, enemy.getRectangle());
+    }
 }

@@ -17,6 +17,7 @@ import java.util.Random;
 public class BotManager {
     private ArrayList<Enemy> enemies;
     private ArrayList<BotLaser> botLasers;
+    private ArrayList<PlayerLaser> playerLasers;
 
     private long startTime;
     private long initTime;
@@ -26,9 +27,11 @@ public class BotManager {
     public BotManager() {
         enemies = new ArrayList<>();
         botLasers = new ArrayList<>();
+        playerLasers = new ArrayList<>();
         Constants.MOVE_FLOOR = (Constants.SCREEN_HEIGHT/3);
         Constants.BOT_MOVE_SPEED = 180;
         Constants.LASER_BOLT_SPEED = 290;
+        score = 0;
     }
 
     public void update() {
@@ -39,13 +42,16 @@ public class BotManager {
 
         startTime = System.currentTimeMillis();
 
-        for(Enemy enemy : enemies) {
-            enemy.move();
-            if(enemy.shouldFire()) {
-                //TODO add the laser object to the ArrayList to track and move them here along with enemies
-
-                botLasers.add(0, enemy.fire());
+        for(Iterator<Enemy> enemyIterator = enemies.iterator(); enemyIterator.hasNext();) {
+            Enemy enemy = enemyIterator.next();
+            if (botShot(enemy)) {
+                enemy.laserHit();
+                if (enemy.isDead())
+                    enemyIterator.remove();
             }
+            enemy.move();
+            if (enemy.shouldFire())
+                botLasers.add(0, enemy.fire());
         }
 
         for(Iterator<BotLaser> laserIterator = botLasers.iterator(); laserIterator.hasNext();) {
@@ -53,6 +59,14 @@ public class BotManager {
             laser.move();
             laser.update();
             if(laser.getRectangle().bottom >= Constants.SCREEN_HEIGHT)
+                laserIterator.remove();
+        }
+
+        for(Iterator<PlayerLaser> laserIterator = playerLasers.iterator(); laserIterator.hasNext();) {
+            PlayerLaser laser = laserIterator.next();
+            laser.move();
+            laser.update();
+            if(laser.getRectangle().top <= 0)
                 laserIterator.remove();
         }
 
@@ -66,14 +80,14 @@ public class BotManager {
         for (Enemy enemy : enemies) {
             enemy.draw(canvas);
         }
-        //TODO Issue here with animation of the laser. Currently only the enemy abstract class has the animation manager, no way to pair the two right now. Maybe add animation manager to BotLaser class? Or create laser class for both player and Bot?
-        for(BotLaser laser : botLasers) {
+
+        for (BotLaser laser : botLasers) {
             laser.draw(canvas);
         }
-//        Paint paint = new Paint();
-//        paint.setTextSize(100);
-//        paint.setColor(Color.MAGENTA);
-//        canvas.drawText("Score: " + score, 50, 50 + paint.descent() - paint.ascent(), paint);
+
+        for (PlayerLaser laser : playerLasers) {
+            laser.draw(canvas);
+        }
     }
 
     private boolean shouldSpawn() {
@@ -83,6 +97,11 @@ public class BotManager {
         } else {
             return false;
         }
+    }
+
+    public void playerFired(RectPlayer player) {
+        //TODO add a check that limits the number of PlayerLasers on the field at once
+        this.playerLasers.add(player.fire());
     }
 
     private void spawn(int type) {
@@ -114,6 +133,18 @@ public class BotManager {
     public boolean playerShot(RectPlayer player) {
         for (BotLaser laser : botLasers) {
             if(laser.playerShot(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean botShot(Enemy enemy) {
+        for(Iterator<PlayerLaser> laserIterator = playerLasers.iterator(); laserIterator.hasNext();) {
+            PlayerLaser laser = laserIterator.next();
+            if (laser.botShot(enemy)) {
+                laserIterator.remove();
+                score += enemy.getScoreValue();
                 return true;
             }
         }

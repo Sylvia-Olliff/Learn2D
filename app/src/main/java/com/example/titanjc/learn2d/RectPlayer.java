@@ -65,5 +65,9 @@ public class RectPlayer implements GameObject {
         animationManager.update();
     }
 
+    public PlayerLaser fire() {
+        return new PlayerLaser(new Rect(rectangle.left, rectangle.top, rectangle.right, rectangle.bottom));
+    }
+
 
 }

@@ -15,6 +15,10 @@ public abstract class Enemy implements GameObject {
     private AnimationManager animationManager;
     private int count = 0;
     private boolean left;
+    protected int hits;
+    protected int scoreValue;
+    public Rect getRectangle() {return rectangle;}
+    public int getScoreValue() {return scoreValue;}
 
     public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
         this.rectangle = rectangle;
@@ -74,6 +78,14 @@ public abstract class Enemy implements GameObject {
 
     public BotLaser fire() {
         return new BotLaser(new Rect(rectangle.left, rectangle.top, rectangle.right, rectangle.bottom - 15));
+    }
+
+    public void laserHit() {
+        hits++;
+    }
+
+    public boolean isDead() {
+        return false;
     }
 
     @Override

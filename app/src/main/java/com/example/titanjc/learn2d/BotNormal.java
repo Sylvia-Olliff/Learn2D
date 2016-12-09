@@ -16,7 +16,7 @@ public class BotNormal extends Enemy {
     private int MAX_HITS = 1;
     private int MIN_FIRE_RATE = 3;
     private int MAX_FIRE_RATE = 10;
-    private int hits;
+    private int SCORE_VALUE = 50;
     private Random r = new Random();
     private int firingRate;
     private long lastTime;
@@ -31,7 +31,8 @@ public class BotNormal extends Enemy {
 
     public BotNormal(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
         super(idleImg, moveR, moveL, rectangle);
-        this.hits = 0;
+        super.hits = 0;
+        super.scoreValue = SCORE_VALUE;
         this.firingRate = (r.nextInt(this.MAX_FIRE_RATE - this.MIN_FIRE_RATE)) + this.MIN_FIRE_RATE;
         this.lastTime = System.currentTimeMillis();
         this.currentTime = System.currentTimeMillis();
@@ -81,13 +82,12 @@ public class BotNormal extends Enemy {
         return super.playerCollide(player);
     }
 
-    public boolean laserHit(PlayerLaser playerLaser) {
-        if (Rect.intersects(super.rectangle, playerLaser.getRectangle()))
-            hits++;
-        return Rect.intersects(super.rectangle, playerLaser.getRectangle());
+    @Override
+    public void laserHit() {
+        super.hits++;
     }
 
     public boolean isDead() {
-        return (MAX_HITS == hits);
+        return (hits >= MAX_HITS);
     }
 }
