@@ -50,7 +50,7 @@ public class MainThread extends Thread {
             } finally {
                 if (canvas != null) {
                     try {
-                        surfaceHolder.unlockCanvasAndPost(canvas    );
+                        surfaceHolder.unlockCanvasAndPost(canvas);
                     } catch (Exception e) {e.printStackTrace();}
                 }
             }

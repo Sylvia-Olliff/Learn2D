@@ -129,6 +129,7 @@ public class GameplayScene implements Scene {
                     reset();
                     gameOver = false;
                     orientationData.newGame();
+                    terminate();
                 }
         }
     }
