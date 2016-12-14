@@ -12,14 +12,29 @@ import android.view.MotionEvent;
 
 public class MainMenuScene implements Scene {
     private Rect startButton;
+    private Rect exitButton;
 
     private int buttonEdgeLeft;
     private int buttonEdgeRight;
 
+    private Drawable bg;
+    private Drawable startButtonImg;
+    private Drawable exitButtonImg;
+
     public MainMenuScene() {
         buttonEdgeLeft = Constants.SCREEN_WIDTH/7;
         buttonEdgeRight = 6*Constants.SCREEN_WIDTH/7;
-        startButton = new Rect(buttonEdgeLeft, Constants.SCREEN_HEIGHT/8, buttonEdgeRight, (2*Constants.SCREEN_HEIGHT/8));
+        startButton = new Rect(buttonEdgeLeft, Constants.SCREEN_HEIGHT/8, buttonEdgeRight, 2*Constants.SCREEN_HEIGHT/8);
+        exitButton = new Rect(buttonEdgeLeft, 6*Constants.SCREEN_HEIGHT/8, buttonEdgeRight, 7*Constants.SCREEN_HEIGHT/8);
+
+        bg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.star_background);
+        bg.setBounds(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        //L,T,R,B
+        startButtonImg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.button_start);
+        startButtonImg.setBounds(startButton);
+
+        exitButtonImg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.button_exit);
+        exitButtonImg.setBounds(exitButton);
     }
 
     @Override
@@ -29,14 +44,9 @@ public class MainMenuScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Drawable bg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.star_background);
-        bg.setBounds(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
         bg.draw(canvas);
-
-        Drawable testButton = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.button_start);
-        //L,T,R,B
-        testButton.setBounds(buttonEdgeLeft, Constants.SCREEN_HEIGHT/8, buttonEdgeRight, (2*Constants.SCREEN_HEIGHT/8));
-        testButton.draw(canvas);
+        startButtonImg.draw(canvas);
+        exitButtonImg.draw(canvas);
     }
 
     @Override
