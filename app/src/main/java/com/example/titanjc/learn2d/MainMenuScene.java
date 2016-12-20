@@ -1,5 +1,6 @@
 package com.example.titanjc.learn2d;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -62,6 +63,12 @@ public class MainMenuScene implements Scene {
 
             if(startButton.contains(x, y)) {
                 terminate();
+            }
+
+            if(exitButton.contains(x, y)) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                Constants.CURRENT_CONTEXT.startActivity(intent);
             }
         }
     }

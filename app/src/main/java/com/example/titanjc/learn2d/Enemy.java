@@ -17,10 +17,12 @@ public abstract class Enemy implements GameObject {
     private boolean left;
     protected int hits;
     protected int scoreValue;
+    private int moveFloor;
     public Rect getRectangle() {return rectangle;}
     public int getScoreValue() {return scoreValue;}
 
-    public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle) {
+    public Enemy(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle, int moveFloor) {
+        this.moveFloor = moveFloor;
         this.rectangle = rectangle;
         this.left = (Math.random() < 0.5);
         Animation idle = new Animation(new Bitmap[]{idleImg}, 2);
@@ -38,7 +40,7 @@ public abstract class Enemy implements GameObject {
             left = (Math.random() < 0.5);
         }
 
-        if(rectangle.bottom >= Constants.MOVE_FLOOR) {
+        if(rectangle.bottom >= moveFloor) {
             if (left) {
                 if (rectangle.left - (Constants.BOT_MOVE_SPEED / MainThread.MAX_FPS) <= 0 ) {
                     left = false;
@@ -77,7 +79,14 @@ public abstract class Enemy implements GameObject {
     }
 
     public BotLaser fire() {
-        return new BotLaser(new Rect(rectangle.left, rectangle.top, rectangle.right, rectangle.bottom - 15));
+        Rect botLaserRect = new Rect();
+
+        botLaserRect.left = (((rectangle.right - rectangle.left) / 2) + ((Constants.LASER_BOLT_SIZE/4)/2)) + rectangle.left;
+        botLaserRect.top = rectangle.bottom;
+        botLaserRect.right = botLaserRect.left + (Constants.LASER_BOLT_SIZE/4);
+        botLaserRect.bottom = botLaserRect.top + Constants.LASER_BOLT_SIZE;
+
+        return new BotLaser(botLaserRect);
     }
 
     public void laserHit() {

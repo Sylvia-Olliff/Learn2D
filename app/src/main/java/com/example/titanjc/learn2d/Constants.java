@@ -21,4 +21,6 @@ public class Constants {
     public static int BOT_MOVE_SPEED;
     public static int MAP_BORDER;
     public static int LASER_BOLT_SPEED;
+    public static int LASER_FLASH_SIZE;
+    public static int LASER_BOLT_SIZE;
 }

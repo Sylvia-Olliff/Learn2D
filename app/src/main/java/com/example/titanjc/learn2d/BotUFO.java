@@ -1,7 +1,6 @@
 package com.example.titanjc.learn2d;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -9,14 +8,14 @@ import android.graphics.Rect;
 import java.util.Random;
 
 /**
- * Created by TITANJC on 11/23/2016.
+ * Created by TITANJC on 12/14/2016.
  */
 
-public class BotNormal extends Enemy {
-    private int MAX_HITS = 1;
-    private int MIN_FIRE_RATE = 3;
-    private int MAX_FIRE_RATE = 10;
-    private int SCORE_VALUE = 50;
+public class BotUFO extends Enemy {
+    private int MAX_HITS = 3;
+    private int MIN_FIRE_RATE = 1;
+    private int MAX_FIRE_RATE = 3;
+    private int SCORE_VALUE = 150;
     private Random r = new Random();
     private int firingRate;
     private long lastTime;
@@ -29,7 +28,8 @@ public class BotNormal extends Enemy {
     public int getMaxFireRate() {return MAX_FIRE_RATE;}
     public Rect getRectangle() {return super.rectangle;}
 
-    public BotNormal(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle, int floor) {
+
+    public BotUFO(Bitmap idleImg, Bitmap moveR, Bitmap moveL, Rect rectangle, int floor) {
         super(idleImg, moveR, moveL, rectangle, floor);
         super.hits = 0;
         super.scoreValue = SCORE_VALUE;

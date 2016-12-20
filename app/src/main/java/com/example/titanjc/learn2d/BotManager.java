@@ -29,9 +29,10 @@ public class BotManager {
         enemies = new ArrayList<>();
         botLasers = new ArrayList<>();
         playerLasers = new ArrayList<>();
-        Constants.MOVE_FLOOR = (Constants.SCREEN_HEIGHT/3);
         Constants.BOT_MOVE_SPEED = 180;
         Constants.LASER_BOLT_SPEED = 290;
+        Constants.LASER_BOLT_SIZE = 90;
+        Constants.LASER_FLASH_SIZE = 60;
         score = 0;
     }
 
@@ -72,8 +73,12 @@ public class BotManager {
         }
 
         if (shouldSpawn()) {
-            //TODO Change spawn type to random
-            spawn(1);
+            Random r = new Random();
+            int spawnType = r.nextInt(101 - 1) + 1;
+            if (spawnType >= 80)
+                spawn(2);
+            else
+                spawn(1);
         }
     }
 
@@ -101,25 +106,32 @@ public class BotManager {
     }
 
     public void playerFired(RectPlayer player) {
-        //TODO add a check that limits the number of PlayerLasers on the field at once
-        this.playerLasers.add(player.fire());
+        if(player.canFire())
+            this.playerLasers.add(player.fire());
     }
 
     private void spawn(int type) {
 
-        Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
-        Bitmap walkR = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
-        Bitmap walkL = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
+        Bitmap idleImgNorm = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
+        Bitmap walkRNorm = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
+        Bitmap walkLNorm = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ship);
 
-        int xStart = (int) (Math.random()*(Constants.SCREEN_WIDTH ));
+        Bitmap idleImgUFO = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ufo);
+        Bitmap walkRUFO = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ufo);
+        Bitmap walkLUFO = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.enemy_ufo);
+
+        Random rand = new Random();
+        int botFloor = rand.nextInt(37 - 27) + 27;
+        int moveFloor = ((botFloor*Constants.SCREEN_HEIGHT)/108);
 
         if (type == 1) {
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(110, 110, 260, 260)));
+            enemies.add(0, new BotNormal(idleImgNorm, walkRNorm, walkLNorm, new Rect(110, 110, 260, 260), moveFloor));
             Random r = new Random();
             enemies.get(0).update(new Point(r.nextInt(Constants.SCREEN_WIDTH-1) + 1, -Constants.SCREEN_HEIGHT/4));
         } else if(type == 2) {
-            //TODO: Add UFO spawning
-            enemies.add(0, new BotNormal(idleImg, walkR, walkL, new Rect(200, 200, xStart, 200)));
+            enemies.add(0, new BotUFO(idleImgUFO, walkRUFO, walkLUFO, new Rect(200, 200, 350, 350), moveFloor));
+            Random r = new Random();
+            enemies.get(0).update(new Point(r.nextInt(Constants.SCREEN_WIDTH-1) + 1, -Constants.SCREEN_HEIGHT/4));
         }
     }
 

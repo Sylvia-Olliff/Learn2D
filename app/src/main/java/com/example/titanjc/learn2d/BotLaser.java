@@ -13,21 +13,25 @@ import android.graphics.Rect;
 public class BotLaser implements GameObject {
     private Rect rectangle;
     private AnimationManager animationManager;
-    private int count = 0;
-    private Animation laserFlash;
+    private LaserFlash laserFlash;
+    private int frameCount;
     public Rect getRectangle() {
         return rectangle;
     }
 
     public BotLaser(Rect rectangle) {
         this.rectangle = rectangle;
-        Bitmap flash = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green_shot);
+        Rect botFlashRect = new Rect();
+        botFlashRect.left = rectangle.left - Constants.LASER_FLASH_SIZE;
+        botFlashRect.top = rectangle.top - Constants.LASER_FLASH_SIZE;
+        botFlashRect.right = botFlashRect.left + (Constants.LASER_FLASH_SIZE*2);
+        botFlashRect.bottom = botFlashRect.top + (Constants.LASER_FLASH_SIZE*2);
+        this.laserFlash = new LaserFlash(botFlashRect, BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green_shot));
+        frameCount = 0;
         Bitmap laser = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.laser_green);
-
-        this.laserFlash = new Animation(new Bitmap[]{flash}, 0.5f);
         Animation laserBolt = new Animation(new Bitmap[]{laser}, 0.5f);
 
-        animationManager = new AnimationManager(new Animation[]{laserFlash, laserBolt});
+        animationManager = new AnimationManager(new Animation[]{ laserBolt});
     }
 
     public void move() {
@@ -37,25 +41,28 @@ public class BotLaser implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        if(count != MainThread.MAX_FPS/2) {
-            count++;
+        if (frameCount < 5) {
+            laserFlash.draw(canvas);
+            frameCount++;
         } else {
-            laserFlash.stop();
+            laserFlash = null;
         }
         animationManager.draw(canvas, rectangle);
     }
 
     @Override
     public void update() {
-        animationManager.playAnim(1);
+        if (frameCount < 5) {
+            laserFlash.update();
+        }
+        animationManager.playAnim(0);
         animationManager.update();
     }
 
     public void update(Point point) {
-
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
 
-        animationManager.playAnim(1);
+        animationManager.playAnim(0);
         animationManager.update();
     }
 

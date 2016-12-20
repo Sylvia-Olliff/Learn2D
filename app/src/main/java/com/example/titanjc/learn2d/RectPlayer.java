@@ -20,12 +20,17 @@ public class RectPlayer implements GameObject {
     private Animation walkLeft;
     private AnimationManager animationManager;
 
+    private int fireRate;
+    private long lastFireTime;
+
     public Rect getRectangle() {
         return rectangle;
     }
 
     public RectPlayer(Rect rectangle) {
         this.rectangle = rectangle;
+        this.fireRate = 2;
+        this.lastFireTime = 0;
 
         Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player);
         Bitmap walkR = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.player_right);
@@ -66,7 +71,28 @@ public class RectPlayer implements GameObject {
     }
 
     public PlayerLaser fire() {
-        return new PlayerLaser(new Rect(rectangle.left, rectangle.top, rectangle.right, rectangle.bottom));
+        Rect playerLaserRect = new Rect();
+
+        playerLaserRect.right = (((rectangle.right - rectangle.left) / 2) + ((Constants.LASER_BOLT_SIZE/4)/2)) + rectangle.left;
+        playerLaserRect.bottom = rectangle.top;
+        playerLaserRect.left = playerLaserRect.right - (Constants.LASER_BOLT_SIZE/4);
+        playerLaserRect.top = playerLaserRect.bottom - Constants.LASER_BOLT_SIZE;
+
+        return new PlayerLaser(playerLaserRect);
+    }
+
+    public boolean canFire() {
+        if (lastFireTime == 0) {
+            lastFireTime = System.currentTimeMillis();
+            return true;
+        }
+
+        if ((System.currentTimeMillis() - lastFireTime) >= (1000/fireRate)) {
+            lastFireTime = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
