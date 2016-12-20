@@ -1,9 +1,12 @@
 package com.example.titanjc.learn2d;
 
 import android.graphics.Canvas;
+import android.util.Pair;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by TITANJC on 11/21/2016.
@@ -11,12 +14,18 @@ import java.util.ArrayList;
 
 public class SceneManager {
     private ArrayList<Scene> scenes = new ArrayList<>();
+    private HashMap<String, Integer> sceneNames;
     public static int ACTIVE_SCENE;
+    //TODO Change ACTIVE_SCENE to private, and accessed through a method.
 
     public SceneManager() {
         ACTIVE_SCENE = 0;
         scenes.add(new MainMenuScene());
         scenes.add(new GameplayScene());
+        sceneNames = new HashMap<>();
+        sceneNames.put("MainMenuScene", 0);
+        sceneNames.put("GameplayScene", 1);
+        sceneNames.put("HighScore", 2);
     }
 
     public void recieveTouch(MotionEvent event) {
@@ -29,6 +38,14 @@ public class SceneManager {
 
     public void draw(Canvas canvas) {
         scenes.get(ACTIVE_SCENE).draw(canvas);
+    }
+
+    public void changeScene(String sceneName, String... args) {
+        ACTIVE_SCENE = sceneNames.get(sceneName);
+
+        if (sceneName == "HighScore") {
+            //TODO the String array args first element should be the high score of the game that just ended. This needs to be passed to the High Score scene
+        }
     }
 
 }
