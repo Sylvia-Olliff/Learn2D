@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SceneManager {
     private ArrayList<Scene> scenes = new ArrayList<>();
-    private HashMap<String, Integer> sceneNames;
-    public static int ACTIVE_SCENE;
+    private static HashMap<String, Integer> sceneNames;
+    private static int ACTIVE_SCENE;
     //TODO Change ACTIVE_SCENE to private, and accessed through a method.
 
     public SceneManager() {
@@ -40,12 +40,8 @@ public class SceneManager {
         scenes.get(ACTIVE_SCENE).draw(canvas);
     }
 
-    public void changeScene(String sceneName, String... args) {
+    public static void changeScene(String sceneName) {
         ACTIVE_SCENE = sceneNames.get(sceneName);
-
-        if (sceneName == "HighScore") {
-            //TODO the String array args first element should be the high score of the game that just ended. This needs to be passed to the High Score scene
-        }
     }
 
 }

@@ -52,7 +52,7 @@ public class MainMenuScene implements Scene {
 
     @Override
     public void terminate() {
-        SceneManager.ACTIVE_SCENE = 1;
+        SceneManager.changeScene("GameplayScene");
     }
 
     @Override

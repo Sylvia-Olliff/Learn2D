@@ -117,7 +117,7 @@ public class GameplayScene implements Scene {
 
     @Override
     public void terminate() {
-        SceneManager.ACTIVE_SCENE = 0;
+        SceneManager.changeScene("MainMenuScene");
     }
 
     @Override
