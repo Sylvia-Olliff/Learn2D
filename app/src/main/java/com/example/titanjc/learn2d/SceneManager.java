@@ -22,10 +22,11 @@ public class SceneManager {
         ACTIVE_SCENE = 0;
         scenes.add(new MainMenuScene());
         scenes.add(new GameplayScene());
+        scenes.add(new HighScoreScene());
         sceneNames = new HashMap<>();
         sceneNames.put("MainMenuScene", 0);
         sceneNames.put("GameplayScene", 1);
-        sceneNames.put("HighScore", 2);
+        sceneNames.put("HighScoreScene", 2);
     }
 
     public void recieveTouch(MotionEvent event) {

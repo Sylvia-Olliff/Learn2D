@@ -23,6 +23,7 @@ public class GameplayScene implements Scene {
     private RectPlayer player;
     private Point playerPoint;
     private BotManager botManager;
+    private HighScoreHandler scoreHandler;
 
     private int currentScore;
     private Paint scorePaint;
@@ -46,6 +47,8 @@ public class GameplayScene implements Scene {
         orientationData.register();
         frameTime = System.currentTimeMillis();
         currentScore = botManager.getScore();
+
+        scoreHandler = new HighScoreHandler();
     }
 
     @Override
@@ -116,8 +119,8 @@ public class GameplayScene implements Scene {
     }
 
     @Override
-    public void terminate() {
-        SceneManager.changeScene("MainMenuScene");
+    public void terminate(String scene) {
+        SceneManager.changeScene(scene);
     }
 
     @Override
@@ -128,10 +131,13 @@ public class GameplayScene implements Scene {
                 }
 
                 if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
+                    if(scoreHandler.checkHighScores(currentScore)) {
+                        //TODO: display screen if score is high enough to make it onto High Score
+                    }
                     reset();
                     gameOver = false;
                     orientationData.newGame();
-                    terminate();
+                    terminate("MainMenuScene");
                 }
         }
     }

@@ -14,19 +14,19 @@ import android.view.MotionEvent;
 public class MainMenuScene implements Scene {
     private Rect startButton;
     private Rect exitButton;
-
-    private int buttonEdgeLeft;
-    private int buttonEdgeRight;
+    private Rect highButton;
 
     private Drawable bg;
     private Drawable startButtonImg;
     private Drawable exitButtonImg;
+    private Drawable highButtonImg;
 
     public MainMenuScene() {
-        buttonEdgeLeft = Constants.SCREEN_WIDTH/7;
-        buttonEdgeRight = 6*Constants.SCREEN_WIDTH/7;
+        int buttonEdgeLeft = Constants.SCREEN_WIDTH/7;
+        int buttonEdgeRight = 6*Constants.SCREEN_WIDTH/7;
         startButton = new Rect(buttonEdgeLeft, Constants.SCREEN_HEIGHT/8, buttonEdgeRight, 2*Constants.SCREEN_HEIGHT/8);
         exitButton = new Rect(buttonEdgeLeft, 6*Constants.SCREEN_HEIGHT/8, buttonEdgeRight, 7*Constants.SCREEN_HEIGHT/8);
+        highButton = new Rect(buttonEdgeLeft, 4*Constants.SCREEN_HEIGHT/8, buttonEdgeRight, 5*Constants.SCREEN_HEIGHT/8);
 
         bg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.star_background);
         bg.setBounds(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
@@ -36,6 +36,9 @@ public class MainMenuScene implements Scene {
 
         exitButtonImg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.button_exit);
         exitButtonImg.setBounds(exitButton);
+
+        highButtonImg = ContextCompat.getDrawable( Constants.CURRENT_CONTEXT, R.drawable.button_high);
+        highButtonImg.setBounds(highButton);
     }
 
     @Override
@@ -48,11 +51,12 @@ public class MainMenuScene implements Scene {
         bg.draw(canvas);
         startButtonImg.draw(canvas);
         exitButtonImg.draw(canvas);
+        highButtonImg.draw(canvas);
     }
 
     @Override
-    public void terminate() {
-        SceneManager.changeScene("GameplayScene");
+    public void terminate(String scene) {
+        SceneManager.changeScene(scene);
     }
 
     @Override
@@ -62,13 +66,17 @@ public class MainMenuScene implements Scene {
             int y = (int) event.getY();
 
             if(startButton.contains(x, y)) {
-                terminate();
+                terminate("GameplayScene");
             }
 
             if(exitButton.contains(x, y)) {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 Constants.CURRENT_CONTEXT.startActivity(intent);
+            }
+
+            if (highButton.contains(x, y)) {
+                terminate("HighScoreScene");
             }
         }
     }
